@@ -1,0 +1,4 @@
+const CANVAS_WIDTH = 500
+const CANVAS_HEIGHT = 300
+
+const STANDARD_BEE_SPEED = 3
