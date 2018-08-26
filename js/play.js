@@ -2,8 +2,9 @@
 
 var c = document.getElementById("mainCanvas")
 var ctx = c.getContext("2d")
-console.log(Bee, ctx)
+console.log('start')
 
-const testBee = new Bee()
+const testBee = new Bee ()
 
+initMap(ctx )
 testBee.fly(ctx)

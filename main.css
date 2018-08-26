@@ -1,8 +1,8 @@
 body {
-    background-color: darkgoldenrod
+    background-color: rgb(250, 225, 161)
 }
 #mainCanvas {
-    background: grey;
+    background: rgb(154, 154, 253);
     /* width: 300;
     height: 200; */
 }
