@@ -9,7 +9,7 @@ class Bee {
 
     this.clearBee = ctx => {
       ctx.clearRect(
-        this.x -2 * BEE_RADIUS,
+        this.x - 2 * BEE_RADIUS,
         this.y - 2 * BEE_RADIUS,
         4 * BEE_RADIUS,
         4 * BEE_RADIUS
@@ -38,6 +38,18 @@ class Bee {
       return turns[turns.length - 1]
     }
 
+    this.detectCollision = () =>{
+      const y = Math.floor(this.y) - STANDARD_BEE_SPEED
+      const x = Math.floor(this.x) - STANDARD_BEE_SPEED
+
+      if (theMap[y][x] > 0){
+        console.log( x, y , theMap[y][x])
+        return true
+      }
+
+      return false
+    }
+
     // increments coordinates; returns !whether it has hit a wall
     this.flap = () => {
       const angle = this.getNextAngle()
@@ -45,10 +57,7 @@ class Bee {
       const speedY = Math.sin(angle) * STANDARD_BEE_SPEED
 
       if(
-        this.x < 0 ||
-        this.x > CANVAS_WIDTH ||
-        this.y < 0 ||
-        this.y > CANVAS_HEIGHT
+        this.detectCollision()
       ){
         return false
       }
@@ -63,11 +72,13 @@ class Bee {
       const draw = setInterval(() => {
         // this.clearBee(ctx)
         shouldMove = this.flap()
-        this.displayBee(ctx)
-
         if(!shouldMove){
           clearInterval(draw)
+          return
         }
+         
+        this.displayBee(ctx)
+
       }, FRAME_TIME)
   }
 
