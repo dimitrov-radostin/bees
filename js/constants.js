@@ -2,10 +2,10 @@ const CANVAS_WIDTH = 800
 const CANVAS_HEIGHT = 500
 
 
-const BEE_RADIUS = 5
-const STANDARD_BEE_SPEED = 4
-const MAX_TURN_ANGLE = Math.PI / 4
+const BEE_COLOR = 'yellow'
+const BEE_RADIUS = 3
+const STANDARD_BEE_SPEED = 2
+const MAX_TURN_ANGLE = Math.PI / 2.5
 const FRAME_TIME = 1000 / 60
 
-
-const BEE_COLOR = 'yellow'
+const HIVE_POPULATION = 50

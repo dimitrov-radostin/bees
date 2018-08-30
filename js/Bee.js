@@ -39,11 +39,11 @@ class Bee {
     }
 
     this.detectCollision = () =>{
-      const y = Math.floor(this.y) - STANDARD_BEE_SPEED
-      const x = Math.floor(this.x) - STANDARD_BEE_SPEED
+      const y = Math.max(Math.floor(this.y) , 0)
+      const x = Math.max(Math.floor(this.x) , 0)
 
       if (theMap[y][x] > 0){
-        console.log( x, y , theMap[y][x])
+        console.log( theMap[y][x] == 2 ? 'bee wins' : 'bee dies')
         return true
       }
 
@@ -70,7 +70,7 @@ class Bee {
     this.fly = ctx => {
       var shouldMove = true
       const draw = setInterval(() => {
-        // this.clearBee(ctx)
+        this.clearBee(ctx)
         shouldMove = this.flap()
         if(!shouldMove){
           clearInterval(draw)
