@@ -10,13 +10,17 @@ class Bee {
     this.y = CANVAS_HEIGHT / 2
 
     this.clearBee = ctx => {
-      ctx.clearRect(
-        this.x - 2 * BEE_RADIUS,
-        this.y - 2 * BEE_RADIUS,
-        4 * BEE_RADIUS,
-        4 * BEE_RADIUS
-      )
-      ctx.fillRect(this.x, this.y, 1, 1)
+      // ctx.clearRect(
+      //   this.x - 2 * BEE_RADIUS,
+      //   this.y - 2 * BEE_RADIUS,
+      //   4 * BEE_RADIUS,
+      //   4 * BEE_RADIUS
+      // )
+      // ctx.fillRect(this.x, this.y, 1, 1)
+      ctx.beginPath();
+      ctx.fillStyle = BACK_GROUND_COLOR
+      ctx.arc(this.x, this.y, BEE_RADIUS + 1 , 0, 2 * Math.PI);
+      ctx.fill()
     }
 
     // draws a circle at (x, y)
@@ -45,8 +49,8 @@ class Bee {
       const x = Math.max(Math.floor(this.x) , 0)
 
       if (theMap[y][x] > 0){
-        console.log( theMap[y][x] == 2 ? 'bee wins' : 'bee dies')
-        console.log(`flew for ${Math.round((Date.now() - this.bDate) / 1000)} sec`);
+        // console.log( theMap[y][x] == 2 ? 'bee wins' : 'bee dies')
+        // console.log(`flew for ${Math.round((Date.now() - this.bDate) / 1000)} sec`);
         return true 
       }
 

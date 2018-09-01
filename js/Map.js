@@ -20,9 +20,13 @@ const addBorderToTheMap = () => {
 }
 
 const initMap = ctx => {
+  drawBackground(ctx)
   drawGoal(ctx)
   addBorderToTheMap()
-  console.log(theMap);
+}
+const drawBackground = ctx => {
+  ctx.fillStyle = BACK_GROUND_COLOR
+  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT,)
 }
 
 const drawGoal = ctx => {
