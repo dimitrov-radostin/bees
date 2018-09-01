@@ -7,5 +7,9 @@ console.log('start')
 const testBee = new Bee ()
 
 initMap(ctx )
-prepareHive(ctx)
+
+const myHive = new Hive ()
+myHive.releaseBees(ctx)
+
+
 // testBee.fly(ctx)

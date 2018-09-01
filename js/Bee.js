@@ -2,8 +2,10 @@ class Bee {
   constructor() {
     this.decisions = {
       initalAngle: Math.random() * 2 * Math.PI,
-      turns: []
+      turns: [],
     }
+    this.bDate = Date.now()
+    this.shouldMove = true
     this.x = CANVAS_WIDTH / 10
     this.y = CANVAS_HEIGHT / 2
 
@@ -44,7 +46,8 @@ class Bee {
 
       if (theMap[y][x] > 0){
         console.log( theMap[y][x] == 2 ? 'bee wins' : 'bee dies')
-        return true
+        console.log(`flew for ${Math.round((Date.now() - this.bDate) / 1000)} sec`);
+        return true 
       }
 
       return false
@@ -59,25 +62,26 @@ class Bee {
       if(
         this.detectCollision()
       ){
+        this.shouldMove = false
         return false
       }
 
       this.x += speedX
       this.y += speedY
-      return true
+      this.shouldMove = true
     }
 
     this.fly = ctx => {
-      var shouldMove = true
       const draw = setInterval(() => {
         this.clearBee(ctx)
-        shouldMove = this.flap()
-        if(!shouldMove){
+        this.flap()
+        if(!this.shouldMove){
           clearInterval(draw)
           return
         }
          
-        this.displayBee(ctx)
+      const callBack = () => this.displayBee(ctx)
+      requestAnimationFrame(callBack)
 
       }, FRAME_TIME)
   }
