@@ -1,6 +1,6 @@
 class Hive {
   constructor() {
-    this.bees = Array(HIVE_POPULATION).fill(0).map(_ => new Bee())
+    this.bees = Array(HIVE_POPULATION).fill(0).map(_ => new RandomBee())
     this.releaseBees = ctx => {
       const draw = setInterval(() => {
         if(!this.bees.some(bee => bee.shouldMove)){
@@ -10,7 +10,7 @@ class Hive {
         }
         this.bees.forEach(bee => { 
           if (bee.shouldMove){
-            bee.clearBee(ctx)
+            // bee.clearBee(ctx)
             bee.flap()
           }
         })

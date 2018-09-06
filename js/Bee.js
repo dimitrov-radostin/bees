@@ -1,4 +1,7 @@
-class Bee {
+const initalX = CANVAS_WIDTH / 10
+const initalY = CANVAS_HEIGHT / 2
+
+class RandomBee {
   constructor() {
     this.decisions = {
       initalAngle: Math.random() * 2 * Math.PI,
@@ -6,32 +9,26 @@ class Bee {
     }
     this.bDate = Date.now()
     this.shouldMove = true
-    this.x = CANVAS_WIDTH / 10
-    this.y = CANVAS_HEIGHT / 2
-
-    this.clearBee = ctx => {
-      // ctx.clearRect(
-      //   this.x - 2 * BEE_RADIUS,
-      //   this.y - 2 * BEE_RADIUS,
-      //   4 * BEE_RADIUS,
-      //   4 * BEE_RADIUS
-      // )
-      // ctx.fillRect(this.x, this.y, 1, 1)
-      ctx.beginPath();
-      ctx.fillStyle = BACK_GROUND_COLOR
-      ctx.arc(this.x, this.y, BEE_RADIUS + 1 , 0, 2 * Math.PI);
-      ctx.fill()
-    }
+    this.x = initalX
+    this.y = initalY
+  }
 
     // draws a circle at (x, y)
-    this.displayBee = ctx => {
+    displayBee(ctx) {
       ctx.beginPath();
       ctx.fillStyle = BEE_COLOR
       ctx.arc(this.x, this.y, BEE_RADIUS, 0, 2 * Math.PI);
       ctx.fill()
     }
 
-    this.getNextAngle = () => {
+    clearBee(ctx) {
+      ctx.beginPath();
+      ctx.fillStyle = BACK_GROUND_COLOR
+      ctx.arc(this.x, this.y, BEE_RADIUS + 1 , 0, 2 * Math.PI);
+      ctx.fill()
+    }
+
+    getNextAngle() {
       const { turns, initalAngle } = this.decisions
 
       if (turns.length === 0){
@@ -44,13 +41,13 @@ class Bee {
       return turns[turns.length - 1]
     }
 
-    this.detectCollision = () =>{
-      const y = Math.max(Math.floor(this.y) , 0)
-      const x = Math.max(Math.floor(this.x) , 0)
+    detectCollision() {
+      const y = Math.floor(this.y)
+      const x = Math.floor(this.x)
 
       if (theMap[y][x] > 0){
-        // console.log( theMap[y][x] == 2 ? 'bee wins' : 'bee dies')
-        // console.log(`flew for ${Math.round((Date.now() - this.bDate) / 1000)} sec`);
+        this.score =Math.round( 1000000 * (theMap[y][x] - 1.5) / (Date.now() - this.bDate))
+        console.log(`bee ${theMap[y][x] === 2 ? 'WINS !' : 'dies'} ; score=${this.score}`)
         return true 
       }
 
@@ -58,24 +55,21 @@ class Bee {
     }
 
     // increments coordinates; returns !whether it has hit a wall
-    this.flap = () => {
+    flap() {
       const angle = this.getNextAngle()
       const speedX = Math.cos(angle) * STANDARD_BEE_SPEED
       const speedY = Math.sin(angle) * STANDARD_BEE_SPEED
 
-      if(
-        this.detectCollision()
-      ){
+      if(this.detectCollision()){
         this.shouldMove = false
         return false
       }
 
       this.x += speedX
       this.y += speedY
-      this.shouldMove = true
     }
 
-    this.fly = ctx => {
+    fly(ctx) {
       const draw = setInterval(() => {
         this.clearBee(ctx)
         this.flap()
@@ -88,7 +82,26 @@ class Bee {
       requestAnimationFrame(callBack)
 
       }, FRAME_TIME)
+    }
+  
+}
+
+class Bee extends RandomBee {
+  constructor(initalAngle, turns){
+    super()
+    this.decisions = {
+      initalAngle,
+      turns
+    }
+    this.flaps = 0
   }
 
+  getNextAngle() {
+    console.log('getting next angle ', this.decisions);
+    if(this.decisions.turns.length > this.flaps) {
+      console.log('indeed')
+      return this.decisions.turns[this.flaps++]
+    }
+    return 0
   }
 }
