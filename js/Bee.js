@@ -4,13 +4,12 @@ const initalY = CANVAS_HEIGHT / 2
 class RandomBee {
   constructor() {
     this.decisions = {
-      initalAngle: Math.random() * 2 * Math.PI,
-      turns: [],
+      turns: [+(Math.random() * 2 * Math.PI).toFixed(2)],
     }
-    this.bDate = Date.now()
     this.shouldMove = true
     this.x = initalX
     this.y = initalY
+    this.flaps = 0
   }
 
     // draws a circle at (x, y)
@@ -29,15 +28,11 @@ class RandomBee {
     }
 
     getNextAngle() {
-      const { turns, initalAngle } = this.decisions
-
-      if (turns.length === 0){
-        turns.push(initalAngle)
-        return initalAngle
-      }
-
+      const { turns } = this.decisions
       const lastAngle = turns[turns.length - 1]
-      turns.push(lastAngle + (Math.random() - 0.5) * MAX_TURN_ANGLE)
+
+      turns.push(+(lastAngle + (Math.random() - 0.5) * MAX_TURN_ANGLE).toFixed(2))
+
       return turns[turns.length - 1]
     }
 
@@ -46,8 +41,8 @@ class RandomBee {
       const x = Math.floor(this.x)
 
       if (theMap[y][x] > 0){
-        this.score =Math.round( 1000000 * (theMap[y][x] - 1.5) / (Date.now() - this.bDate))
-        console.log(`bee ${theMap[y][x] === 2 ? 'WINS !' : 'dies'} ; score=${this.score}`)
+        this.score =Math.round( 10000 * (theMap[y][x] - 1.5) / this.flaps)
+        console.log(`bee ${theMap[y][x] === 2 ? 'WINS !' : 'dies'} ; score=${this.score}; flaps ${this.flaps}`)
         return true 
       }
 
@@ -56,6 +51,7 @@ class RandomBee {
 
     // increments coordinates; returns !whether it has hit a wall
     flap() {
+      this.flaps++
       const angle = this.getNextAngle()
       const speedX = Math.cos(angle) * STANDARD_BEE_SPEED
       const speedY = Math.sin(angle) * STANDARD_BEE_SPEED
@@ -87,21 +83,23 @@ class RandomBee {
 }
 
 class Bee extends RandomBee {
-  constructor(initalAngle, turns){
+  constructor(turns){
     super()
-    this.decisions = {
-      initalAngle,
-      turns
-    }
+    this.decisions = { turns: turns.map(angle => angle + (Math.random() - 0.5) * MAX_ANGLE_MUTATION) }
     this.flaps = 0
   }
 
   getNextAngle() {
-    console.log('getting next angle ', this.decisions);
-    if(this.decisions.turns.length > this.flaps) {
-      console.log('indeed')
-      return this.decisions.turns[this.flaps++]
+    const { turns } = this.decisions
+    const flaps = this.flaps
+
+    if(turns.length > this.flaps) {
+      return turns[this.flaps]
+    } else {
+      const lastAngle = turns[turns.length - 1]
+  
+      turns.push(+(lastAngle + (Math.random() - 0.5) * MAX_TURN_ANGLE).toFixed(2))
+      return turns[turns.length - 1]
     }
-    return 0
   }
 }
