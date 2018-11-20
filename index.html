@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,27 @@
     <link rel="stylesheet" href="main.css">
     <title>Document</title>
 </head>
+
 <body>
     <h1>BEES!</h1>
-    <canvas id='mainCanvas' width='800' height='500' >
+    <canvas id='mainCanvas' width='800' height='500'>
     </canvas>
 
     <script src="js/constants.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/Map.js"></script>
     <script src="js/Bee.js"></script>
     <script src="js/Hive.js"></script>
-    <script src="js/play.js"></script>
+    <script>
+        window.onload = () => {
+            const canvas = document.getElementById("mainCanvas")
+            const ctx = canvas.getContext("2d")
+            initMap(ctx)
+
+            const myHive = new Hive()
+            myHive.releaseBees(ctx)
+        }
+    </script>
 </body>
+
 </html>

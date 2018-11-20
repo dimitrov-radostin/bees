@@ -3,32 +3,23 @@ const initalY = CANVAS_HEIGHT / 2
 
 class RandomBee {
   constructor() {
-    this.decisions = {
-      turns: [+(Math.random() * 2 * Math.PI).toFixed(2)],
-    }
+    this.turns = [+(Math.random() * 2 * Math.PI).toFixed(2)]
     this.shouldMove = true
     this.x = initalX
     this.y = initalY
-    this.flaps = 0
+    this.moves = 0
   }
 
-    // draws a circle at (x, y)
     displayBee(ctx) {
-      ctx.beginPath();
-      ctx.fillStyle = BEE_COLOR
-      ctx.arc(this.x, this.y, BEE_RADIUS, 0, 2 * Math.PI);
-      ctx.fill()
+      drawCircle(ctx, this.x, this.y, BEE_RADIUS, BEE_COLOR)
     }
 
     clearBee(ctx) {
-      ctx.beginPath();
-      ctx.fillStyle = BACK_GROUND_COLOR
-      ctx.arc(this.x, this.y, BEE_RADIUS + 1 , 0, 2 * Math.PI);
-      ctx.fill()
+      drawCircle(ctx, this.x, this.y, BEE_RADIUS, BACK_GROUND_COLOR)
     }
 
     getNextAngle() {
-      const { turns } = this.decisions
+      const { turns } = this
       const lastAngle = turns[turns.length - 1]
 
       turns.push(+(lastAngle + (Math.random() - 0.5) * MAX_TURN_ANGLE).toFixed(2))
@@ -41,8 +32,8 @@ class RandomBee {
       const x = Math.floor(this.x)
 
       if (theMap[y][x] > 0){
-        this.score =Math.round( 10000 * (theMap[y][x] - 1.5) / this.flaps)
-        console.log(`bee ${theMap[y][x] === 2 ? 'WINS !' : 'dies'} ; score=${this.score}; flaps ${this.flaps}`)
+        this.score = Math.round(10000 * (theMap[y][x] - 1.5) / this.moves)
+        console.log(`bee ${theMap[y][x] === 2 ? 'WINS !' : 'dies'} ; score=${this.score}; moves ${this.moves}`)
         return true 
       }
 
@@ -50,8 +41,8 @@ class RandomBee {
     }
 
     // increments coordinates; returns !whether it has hit a wall
-    flap() {
-      this.flaps++
+    move() {
+      this.moves++
       const angle = this.getNextAngle()
       const speedX = Math.cos(angle) * STANDARD_BEE_SPEED
       const speedY = Math.sin(angle) * STANDARD_BEE_SPEED
@@ -68,7 +59,7 @@ class RandomBee {
     fly(ctx) {
       const draw = setInterval(() => {
         this.clearBee(ctx)
-        this.flap()
+        this.move()
         if(!this.shouldMove){
           clearInterval(draw)
           return
@@ -85,16 +76,16 @@ class RandomBee {
 class Bee extends RandomBee {
   constructor(turns){
     super()
-    this.decisions = { turns: turns.map(angle => angle + (Math.random() - 0.5) * MAX_ANGLE_MUTATION) }
-    this.flaps = 0
+    this.turns = turns
+      .map(angle => angle + (Math.random() - 0.5) * MAX_ANGLE_MUTATION) 
+    this.moves = 0
   }
 
   getNextAngle() {
-    const { turns } = this.decisions
-    const flaps = this.flaps
+    const { turns, moves } = this
 
-    if(turns.length > this.flaps) {
-      return turns[this.flaps]
+    if(turns.length > moves) {
+      return turns[moves]
     } else {
       const lastAngle = turns[turns.length - 1]
   
