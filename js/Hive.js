@@ -1,9 +1,13 @@
 class Hive {
-  constructor(previousBees) {
-      if (previousBees){
-      this.bees = previousBees.map(({turns}) => new Bee(turns))
+  constructor(context, map, previousBees) {
+    this.ctx = context
+    this.map = map
+    const hive = this
+
+    if (previousBees){
+      this.bees = previousBees.map(({turns}) => new Bee(hive, turns))
     } else {
-      this.bees = Array(HIVE_POPULATION).fill(0).map(_ => new RandomBee())
+      this.bees = Array(HIVE_POPULATION).fill(0).map(_ => new RandomBee(hive))
     }
   }
 
@@ -14,7 +18,7 @@ class Hive {
     return [...goodBees, ...goodBees]
   }
 
-  releaseBees(ctx) {
+  releaseBees() {
     const draw = setInterval(() => {
       if(!this.bees.some(bee => bee.shouldMove)){
         clearInterval(draw)
@@ -23,23 +27,27 @@ class Hive {
         // const decisionsSortedByscore = this.bees.sort((b1, b2) => b1.score - b2.score).map(b => b.decisions.turns)
 
         // console.log(decisionsSortedByscore)
+
+        // -----recursion ---- felt wrong when rereading some time later
+        // why a method would create a new instance
         const nextDecisions = Hive.getNextBeeGeneration(this.bees)
-        const newHive = new Hive(nextDecisions)
+        const newHive = new Hive(this.ctx, this.map, nextDecisions)
         console.log(newHive)
-        newHive.releaseBees(ctx)
+        newHive.releaseBees()
         return
       }
 
+      let self = this
       this.bees.forEach(bee => { 
         if (bee.shouldMove){
-          bee.clearBee(ctx)
+          bee.clearBee(self.ctx)
           bee.move()
         }
       })
         
       const callBack = () => this.bees.forEach(bee => {
         if (bee.shouldMove){
-          bee.displayBee(ctx)
+          bee.displayBee(self.ctx)
         } 
       })
 

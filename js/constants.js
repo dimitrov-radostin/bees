@@ -1,5 +1,5 @@
-const CANVAS_WIDTH = 800
-const CANVAS_HEIGHT = 500
+// const CANVAS_WIDTH = 800
+// const CANVAS_HEIGHT = 500
 
 const BACK_GROUND_COLOR = 'blue'
 const BEE_COLOR = 'yellow'

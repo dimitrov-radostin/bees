@@ -1,12 +1,13 @@
-const initalX = CANVAS_WIDTH / 10
-const initalY = CANVAS_HEIGHT / 2
-
+// const initalX = CANVAS_WIDTH / 10
+// const initalY = CANVAS_HEIGHT / 2
+// 
 class RandomBee {
-  constructor() {
+  constructor(hive) {
+    this.hive = hive
     this.turns = [+(Math.random() * 2 * Math.PI).toFixed(2)]
     this.shouldMove = true
-    this.x = initalX
-    this.y = initalY
+    this.x = hive.ctx.canvas.clientWidth / 10
+    this.y = hive.ctx.canvas.clientHeight / 2 
     this.moves = 0
   }
 
@@ -31,9 +32,15 @@ class RandomBee {
       const y = Math.floor(this.y)
       const x = Math.floor(this.x)
 
-      if (theMap[y][x] > 0){
-        this.score = Math.round(10000 * (theMap[y][x] - 1.5) / this.moves)
-        console.log(`bee ${theMap[y][x] === 2 ? 'WINS !' : 'dies'} ; score=${this.score}; moves ${this.moves}`)
+      if (this.hive.map[y][x] > 0){
+        // this.score = Math.round(10000 * (this.hive.map[y][x] - 1.5) / this.moves)
+        this.score = 
+          this.hive.map[y][x] === 2 ? 5000 / this.moves :
+          this.hive.map[y][x] === 1 ? this.moves / 50 :
+          'bee died unexplicably'
+         
+
+        console.log(`score=${this.score}; moves ${this.moves}`)
         return true 
       }
 
@@ -56,26 +63,28 @@ class RandomBee {
       this.y += speedY
     }
 
-    fly(ctx) {
-      const draw = setInterval(() => {
-        this.clearBee(ctx)
-        this.move()
-        if(!this.shouldMove){
-          clearInterval(draw)
-          return
-        }
-         
-      const callBack = () => this.displayBee(ctx)
-      requestAnimationFrame(callBack)
+    // moved to the hive so that all bees are rendered at once
 
-      }, FRAME_TIME)
-    }
+    // fly(ctx) {
+    //   const draw = setInterval(() => {
+    //     this.clearBee(ctx)
+    //     this.move()
+    //     if(!this.shouldMove){
+    //       clearInterval(draw)
+    //       return
+    //     }
+         
+    //   const callBack = () => this.displayBee(ctx)
+    //   requestAnimationFrame(callBack)
+
+    //   }, FRAME_TIME)
+    // }
   
 }
 
 class Bee extends RandomBee {
-  constructor(turns){
-    super()
+  constructor(hive, turns){
+    super(hive)
     this.turns = turns
       .map(angle => angle + (Math.random() - 0.5) * MAX_ANGLE_MUTATION) 
     this.moves = 0
